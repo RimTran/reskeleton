@@ -26,6 +26,9 @@
     "reselect": "^3.0.1",
     "rxjs": "^5.5.6"
   },
+  "devDependencies": {
+    "react-scripts": "^1.0.17"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
