@@ -1,10 +1,13 @@
-import { upperCase, reduce } from 'lodash';
+import { reduce, toUpper, snakeCase, flow } from 'lodash';
 import { fromJS } from 'immutable';
 import { createActions, handleActions } from 'redux-actions';
+import { createSelector } from 'reselect';
 
 import { REDUX_SUFFIXES, AJAX_SUFFIXES } from 'appConstants';
 
 const { AJAX_CALL_SUCCEEDED_SUFFIX, AJAX_CALL_FAILED_SUFFIX } = AJAX_SUFFIXES;
+
+const upperCase = flow(snakeCase, toUpper);
 
 const reduxGenerator = (featureName,) => {
   const _featureName = upperCase(featureName);
@@ -62,15 +65,25 @@ const reduxGenerator = (featureName,) => {
       return state.set('deleteError', fromJS({}));
     },
   }, fromJS({}));
+
   const select = state => state.get(featureName);
-  // itemsSelector
-  // itemSelector
+  const selectAjax = state => state.get('ajax');
+  const selectors = {
+    itemsSelector: createSelector(select, f => f.get('items')),
+    itemSelector: createSelector(select, f => f.get('item')),
+    isLoadingItems: createSelector(selectAjax, ajax => ajax.get(`${_featureName}_GET_ALL`)),
+    isLoadingItem: createSelector(selectAjax, ajax => ajax.get(`${_featureName}_GET`)),
+    isInserting: createSelector(selectAjax, ajax => ajax.get(`${_featureName}_INSERT`)),
+    isUpdating: createSelector(selectAjax, ajax => ajax.get(`${_featureName}_UPDATE`)),
+    isDeleting: createSelector(selectAjax, ajax => ajax.get(`${_featureName}_DELETE`)),
+  };
 
   return {
     actionTypes,
     actions,
     reducer,
     select,
+    selectors,
   };
 };
 

@@ -2,7 +2,7 @@ import React, { PureComponent, div } from 'react';
 import { connect } from 'react-redux';
 import { createStructuredSelector } from 'reselect';
 
-import { usersActions, userSelector } from 'reduxResources/users';
+import { usersActions, usersSelectors } from 'reduxResources/users';
 
 class HomeContainer extends PureComponent {
 
@@ -11,7 +11,13 @@ class HomeContainer extends PureComponent {
   }
 
   render() {
-    const { user } = this.props;
+    const { user, isLoading } = this.props;
+    if (isLoading) {
+      return (
+        <div>isLoading</div>
+      );
+    }
+
     return (
       <div>
         {user && JSON.stringify(user)}
@@ -21,7 +27,8 @@ class HomeContainer extends PureComponent {
 }
 
 const mapStateToProps = createStructuredSelector({
-  user: userSelector,
+  user: usersSelectors.itemSelector,
+  isLoading: usersSelectors.isLoadingItem,
 });
 
 const mapDispatchToProps = (dispatch) => {

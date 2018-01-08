@@ -1,13 +1,9 @@
-import { createSelector } from 'reselect';
 import { reduxGenerator } from 'utils/reduxHelpers';
 
-const { reducer, actions, select } = reduxGenerator('users');
-export const userSelector = createSelector(
-  select,
-  users => users.get('item'),
-);
+const { reducer, actions, selectors: usersSelectors } = reduxGenerator('users');
 
 export {
   reducer,
   actions as usersActions,
+  usersSelectors,
 };
